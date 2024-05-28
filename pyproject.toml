@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "timevery"
-version = "0.0.1"
+version = "0.0.2"
 description = "Monitor the time cost of your code easily."
 readme = "README.md"
 authors = [{name = "Shi Changshan", email = "changshanshi@outlook.com"}]
@@ -14,6 +14,9 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 keywords = ["timer"]
+dependencies = [
+    "rich",
+]
 
 [project.urls]
 Homepage = "https://github.com/Bardreamaster/timevery"
