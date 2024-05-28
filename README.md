@@ -2,7 +2,16 @@
 
 Python timer for measuring execution time.
 
-## Basic Usage
+[![PyPI License](https://img.shields.io/pypi/l/timevery.svg)](https://pypi.org/project/timevery)
+[![PyPI Version](https://img.shields.io/pypi/v/timevery.svg)](https://pypi.org/project/timevery)
+
+## Quick Start
+
+- Install `timevery`:
+
+    ```bash
+    pip install timevery
+    ```
 
 You can use `timevery.Timer` in several different ways:
 
