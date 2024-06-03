@@ -138,6 +138,45 @@ You can use `timevery.Timer` in several different ways:
 
     </details>
 
+## API
+
+### `Timer`
+
+- `Timer()`
+
+    ```python
+    class Timer(ContextDecorator):
+        def __init__(
+            self,
+            name: Optional[str] = "Timer",
+            text: Optional[str] = "Elapsed time of {name}: {seconds:0.4f} seconds. ",
+            initial_text: Union[bool, str] = False,
+            show_freq: Optional[bool] = False,
+            show_report: Optional[bool] = False,
+            logger: Optional[Callable] = print,
+            time_function: Optional[Callable] = time.perf_counter,
+        ):
+            """Create a Timer.
+
+            Args:
+                name (Optional[str], optional): Timer's name. Defaults to "Timer".
+                text (Optional[str]): Then text shown when `stop()` or `lap()` is called.
+                    Defaults to "Elapsed time of {name}: {seconds:0.4f} seconds. ".
+                    Available substitutions: {name}, {milliseconds}, {seconds}, {minutes}.
+                initial_text (Union[bool, str], optional): The text shown when `start()` is called. Defaults to False.
+                show_freq (Optional[str]): Show frequency when `stop()` is called if is True. Defaults to False.
+                show_report (Optional[str]): Show report when `stop()` is called if is True. Defaults to False.
+                logger (Optional[Callable], optional): Callable to show logs. Defaults to `print`.
+                time_function (Optional[Callable], optional): The function can return a number to indicate the time it be called.
+                    Defaults to `time.perf_counter()` in seconds. `time.time()`, `time.monotonic()`, `time.process_time()` are also available.
+            """
+    ```
+
+- `Timer.start()`
+- `Timer.stop()`
+- `Timer.lap(name: Optional[str] = None)`
+- `Timer.report()`
+
 ## Acknowledgement
 
 Thanks to [this tutorial](https://realpython.com/python-timer/) and the [`codetiming`](https://github.com/realpython/codetiming) for the inspiration.

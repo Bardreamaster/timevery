@@ -18,18 +18,33 @@ class TimeRecord:
 class Timer(ContextDecorator):
     def __init__(
         self,
-        name: Optional[str] = None,
-        text: Optional[str] = "Elapsed time of {name}: {:0.4f} seconds. ",
+        name: Optional[str] = "Timer",
+        text: Optional[str] = "Elapsed time of {name}: {seconds:0.4f} seconds. ",
         initial_text: Union[bool, str] = False,
-        show_freq: bool = False,
-        show_report: bool = False,
+        show_freq: Optional[bool] = False,
+        show_report: Optional[bool] = False,
         logger: Optional[Callable] = print,
         time_function: Optional[Callable] = time.perf_counter,
     ):
-        if name is None:
-            name = "Timer"
+        """Create a Timer.
+
+        Args:
+            name (Optional[str], optional): Timer's name. Defaults to "Timer".
+            text (Optional[str]): Then text shown when `stop()` or `lap()` is called.
+                Defaults to "Elapsed time of {name}: {seconds:0.4f} seconds. ".
+                Available substitutions: {name}, {milliseconds}, {seconds}, {minutes}.
+            initial_text (Union[bool, str], optional): The text shown when `start()` is called. Defaults to False.
+            show_freq (Optional[str]): Show frequency when `stop()` is called if is True. Defaults to False.
+            show_report (Optional[str]): Show report when `stop()` is called if is True. Defaults to False.
+            logger (Optional[Callable], optional): Callable to show logs. Defaults to `print`.
+            time_function (Optional[Callable], optional): The function can return a number to indicate the time it be called.
+                Defaults to `time.perf_counter()` in seconds. `time.time()`, `time.monotonic()`, `time.process_time()` are also available.
+        """
+
         self.name = name
         self.text = text
+        # TODO: list available substitutions for test
+
         if isinstance(initial_text, bool):
             initial_text = "{name} started."
         self.initial_text = initial_text
@@ -73,7 +88,7 @@ class Timer(ContextDecorator):
                 "seconds": elapsed_time,
                 "minutes": elapsed_time / 60,
             }
-            text = self.text.format(elapsed_time, **attributes)
+            text = self.text.format(**attributes)
             self.logger(str(text))
 
         return elapsed_time
@@ -99,7 +114,7 @@ class Timer(ContextDecorator):
                 "seconds": elapsed_time,
                 "minutes": elapsed_time / 60,
             }
-            text = self.text.format(elapsed_time, **attributes)
+            text = self.text.format(**attributes)
 
             if self.show_freq:
                 freq = 1 / elapsed_time
