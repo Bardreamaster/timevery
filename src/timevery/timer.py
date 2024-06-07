@@ -54,7 +54,10 @@ class Timer(ContextDecorator):
         self.name = name
         self.text = text
         if isinstance(initial_text, bool):
-            initial_text = "{name} started."
+            if initial_text:
+                initial_text = "{name} started."
+        elif not isinstance(initial_text, str):
+            raise TimerError("initial_text must be a string or a boolean.")
         self.initial_text = initial_text
         self.show_freq = show_freq
         self.show_report = show_report
