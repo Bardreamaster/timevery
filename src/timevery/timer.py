@@ -78,7 +78,7 @@ class Timer(ContextDecorator):
                 raise TimerError("Timer is running. Use .stop() to stop it")
 
         # Log initial text when timer starts
-        if self.logger:
+        if self.logger and self.initial_text:
             initial_text = self.initial_text.format(name=self.name)
             self.logger(initial_text)
 
