@@ -140,7 +140,7 @@ You can use `timevery.Timer` in several different ways:
 
 ## API
 
-### `Timer`
+### `timevery.Timer()`
 
 - `Timer()`
 
@@ -153,6 +153,7 @@ You can use `timevery.Timer` in several different ways:
             initial_text: Union[bool, str] = False,
             show_freq: Optional[bool] = False,
             show_report: Optional[bool] = False,
+            auto_restart: Optional[bool] = False,
             logger: Optional[Callable] = print,
             time_function: Optional[Callable] = time.perf_counter,
         ):
@@ -166,6 +167,7 @@ You can use `timevery.Timer` in several different ways:
                 initial_text (Union[bool, str], optional): The text shown when `start()` is called. Defaults to False.
                 show_freq (Optional[str]): Show frequency when `stop()` is called if is True. Defaults to False.
                 show_report (Optional[str]): Show report when `stop()` is called if is True. Defaults to False.
+                auto_restart: Optional[bool]: Restart the timer when `start()` is called if is True. Defaults to False.
                 logger (Optional[Callable], optional): Callable to show logs. Defaults to `print`.
                 time_function (Optional[Callable], optional): The function can return a number to indicate the time it be called.
                     Defaults to `time.perf_counter()` in seconds. `time.time()`, `time.monotonic()`, `time.process_time()` are also available.

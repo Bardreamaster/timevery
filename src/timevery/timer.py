@@ -16,6 +16,14 @@ class TimeRecord:
 
 @dataclass
 class Timer(ContextDecorator):
+    name: str = "Timer"
+    text: str = "Elapsed time of {name}: {seconds:0.4f} seconds. "
+    initial_text: Union[bool, str] = False
+    show_freq: bool = False
+    show_report: bool = False
+    auto_restart: bool = False
+    logger: Callable = print
+
     def __init__(
         self,
         name: Optional[str] = "Timer",
@@ -23,6 +31,7 @@ class Timer(ContextDecorator):
         initial_text: Union[bool, str] = False,
         show_freq: Optional[bool] = False,
         show_report: Optional[bool] = False,
+        auto_restart: Optional[bool] = False,
         logger: Optional[Callable] = print,
         time_function: Optional[Callable] = time.perf_counter,
     ):
@@ -36,6 +45,7 @@ class Timer(ContextDecorator):
             initial_text (Union[bool, str], optional): The text shown when `start()` is called. Defaults to False.
             show_freq (Optional[str]): Show frequency when `stop()` is called if is True. Defaults to False.
             show_report (Optional[str]): Show report when `stop()` is called if is True. Defaults to False.
+            auto_restart: Optional[bool]: Restart the timer when `start()` is called if is True. Defaults to False.
             logger (Optional[Callable], optional): Callable to show logs. Defaults to `print`.
             time_function (Optional[Callable], optional): The function can return a number to indicate the time it be called.
                 Defaults to `time.perf_counter()` in seconds. `time.time()`, `time.monotonic()`, `time.process_time()` are also available.
@@ -43,13 +53,12 @@ class Timer(ContextDecorator):
 
         self.name = name
         self.text = text
-        # TODO: list available substitutions for test
-
         if isinstance(initial_text, bool):
             initial_text = "{name} started."
         self.initial_text = initial_text
         self.show_freq = show_freq
         self.show_report = show_report
+        self.auto_restart = auto_restart
         self.logger = logger
         self.time_function = time_function  # get a time in seconds
         self._records = {name: TimeRecord()}
@@ -59,7 +68,11 @@ class Timer(ContextDecorator):
     def start(self):
         """Start a new timer."""
         if self._start_time is not None:
-            raise TimerError("Timer is running. Use .stop() to stop it")
+            if self.auto_restart:
+                self.lap("auto-restart")
+                self.stop()
+            else:
+                raise TimerError("Timer is running. Use .stop() to stop it")
 
         # Log initial text when timer starts
         if self.logger:
