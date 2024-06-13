@@ -89,6 +89,13 @@ class Timer(ContextDecorator):
         """Record a lap time."""
         if name is None:
             name = str(len(self._records))
+        else:
+            try:
+                name = str(name)
+            except Exception as e:
+                raise TimerError(
+                    "name must be a string or can be convert to a string with `str()`."
+                ) from e
         if self._start_time is None:
             raise TimerError("Timer is not running. Use .start() to start it")
 
