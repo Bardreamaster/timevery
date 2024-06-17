@@ -40,3 +40,11 @@ def locate():
 
 
 locate()
+
+t = Timer("Sleep until next period", period=0.5, show_report=True)
+
+for i in range(5):
+    t.start()
+    time.sleep(0.1)
+    t.lap("do something")
+    t.sleep_until_next_period_and_stop()

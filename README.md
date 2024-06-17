@@ -138,6 +138,8 @@ You can use `timevery.Timer` in several different ways:
 
     </details>
 
+Some showcases are available in the [showcase.py](showcase.py).
+
 ## API
 
 ### `timevery.Timer()`
@@ -151,6 +153,7 @@ You can use `timevery.Timer` in several different ways:
             name: Optional[str] = "Timer",
             text: Optional[str] = "Elapsed time of {name}: {seconds:0.4f} seconds. ",
             initial_text: Union[bool, str] = False,
+            period: Optional[float] = None,
             show_freq: Optional[bool] = False,
             show_report: Optional[bool] = False,
             auto_restart: Optional[bool] = False,
@@ -165,6 +168,7 @@ You can use `timevery.Timer` in several different ways:
                     Defaults to "Elapsed time of {name}: {seconds:0.4f} seconds. ".
                     Available substitutions: {name}, {milliseconds}, {seconds}, {minutes}.
                 initial_text (Union[bool, str], optional): The text shown when `start()` is called. Defaults to False.
+                period (Optional[float]): Period of the timer. Defaults to None. Use with `sleep_until_next_period()`, `stop_and_sleep_until_next_period()`, `sleep_until_next_period_and_stop()`.
                 show_freq (Optional[str]): Show frequency when `stop()` is called if is True. Defaults to False.
                 show_report (Optional[str]): Show report when `stop()` is called if is True. Defaults to False.
                 auto_restart: Optional[bool]: Restart the timer when `start()` is called if is True. Defaults to False.

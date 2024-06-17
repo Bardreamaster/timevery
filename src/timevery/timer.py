@@ -29,6 +29,7 @@ class Timer(ContextDecorator):
         name: Optional[str] = "Timer",
         text: Optional[str] = "Elapsed time of {name}: {seconds:0.4f} seconds. ",
         initial_text: Union[bool, str] = False,
+        period: Optional[float] = None,
         show_freq: Optional[bool] = False,
         show_report: Optional[bool] = False,
         auto_restart: Optional[bool] = False,
@@ -43,6 +44,7 @@ class Timer(ContextDecorator):
                 Defaults to "Elapsed time of {name}: {seconds:0.4f} seconds. ".
                 Available substitutions: {name}, {milliseconds}, {seconds}, {minutes}.
             initial_text (Union[bool, str], optional): The text shown when `start()` is called. Defaults to False.
+            period (Optional[float]): Period of the timer. Defaults to None. Use with `sleep_until_next_period()`, `stop_and_sleep_until_next_period()`, `sleep_until_next_period_and_stop()`.
             show_freq (Optional[str]): Show frequency when `stop()` is called if is True. Defaults to False.
             show_report (Optional[str]): Show report when `stop()` is called if is True. Defaults to False.
             auto_restart: Optional[bool]: Restart the timer when `start()` is called if is True. Defaults to False.
@@ -59,6 +61,7 @@ class Timer(ContextDecorator):
         elif not isinstance(initial_text, str):
             raise TimerError("initial_text must be a string or a boolean.")
         self.initial_text = initial_text
+        self.period = period
         self.show_freq = show_freq
         self.show_report = show_report
         self.auto_restart = auto_restart
@@ -148,6 +151,28 @@ class Timer(ContextDecorator):
         if self.show_report:
             self.report()
         return elapsed_time
+
+    def sleep_until_next_period(self, name: Optional[str] = "sleep"):
+        """Sleep until the next period."""
+        if self.period is None:
+            raise TimerError("Period is not set.")
+        elapsed_time = self.time_function() - self._start_time
+        if elapsed_time < self.period:
+            time.sleep(self.period - elapsed_time)
+        self.lap(name)
+
+    def stop_and_sleep_until_next_period(self):
+        """Stop the timer, and sleep until the next period."""
+        elapsed_time = self.stop()
+        if self.period is None:
+            raise TimerError("Period is not set.")
+        if elapsed_time < self.period:
+            time.sleep(self.period - elapsed_time)
+
+    def sleep_until_next_period_and_stop(self, name: Optional[str] = "sleep"):
+        """Sleep until the next period, and stop the timer."""
+        self.sleep_until_next_period(name)
+        return self.stop()
 
     def report(self):
         from rich import box
