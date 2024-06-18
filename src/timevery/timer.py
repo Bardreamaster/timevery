@@ -21,6 +21,7 @@ class Timer(ContextDecorator):
     initial_text: Union[bool, str] = False
     show_freq: bool = False
     show_report: bool = False
+    report_throttle_times: int = 1
     auto_restart: bool = False
     logger: Callable = print
 
@@ -32,6 +33,7 @@ class Timer(ContextDecorator):
         period: Optional[float] = None,
         show_freq: Optional[bool] = False,
         show_report: Optional[bool] = False,
+        report_throttle_times: Optional[int] = 1,
         auto_restart: Optional[bool] = False,
         logger: Optional[Callable] = print,
         time_function: Optional[Callable] = time.perf_counter,
@@ -47,6 +49,7 @@ class Timer(ContextDecorator):
             period (Optional[float]): Period of the timer. Defaults to None. Use with `sleep_until_next_period()`, `stop_and_sleep_until_next_period()`, `sleep_until_next_period_and_stop()`.
             show_freq (Optional[str]): Show frequency when `stop()` is called if is True. Defaults to False.
             show_report (Optional[str]): Show report when `stop()` is called if is True. Defaults to False.
+            report_throttle_times (Optional[int]): Show report every `report_throttle_times` times. Defaults to 1.
             auto_restart: Optional[bool]: Restart the timer when `start()` is called if is True. Defaults to False.
             logger (Optional[Callable], optional): Callable to show logs. Defaults to `print`.
             time_function (Optional[Callable], optional): The function can return a number to indicate the time it be called.
@@ -64,6 +67,7 @@ class Timer(ContextDecorator):
         self.period = period
         self.show_freq = show_freq
         self.show_report = show_report
+        self.report_throttle_times = report_throttle_times
         self.auto_restart = auto_restart
         self.logger = logger
         self.time_function = time_function  # get a time in seconds
@@ -175,6 +179,9 @@ class Timer(ContextDecorator):
         return self.stop()
 
     def report(self):
+        times = len(self._records[self.name].time)
+        if not times % self.report_throttle_times == 0:
+            return
         from rich import box
         from rich.console import Console
         from rich.table import Table
