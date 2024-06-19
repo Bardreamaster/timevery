@@ -41,7 +41,9 @@ def locate():
 
 locate()
 
-t = Timer("Sleep until next period", period=0.5, show_report=True, report_throttle_times=2)
+t = Timer(
+    "Sleep until next period", period=0.5, show_report=True, report_throttle_times=2
+)
 
 for i in range(5):
     t.start()
