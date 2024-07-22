@@ -1,6 +1,7 @@
 import time
+from collections import deque
 from contextlib import ContextDecorator
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Callable, List, Optional, Union
 
 
@@ -10,8 +11,22 @@ class TimerError(Exception):
 
 @dataclass
 class TimeRecord:
-    total_time: float = 0
-    time: List[float] = field(default_factory=list)
+    total_time: float = 0.0
+    time: List[float] = deque(maxlen=120)
+    count: int = 0
+    average: float = 0.0
+    frequency: float = 0.0
+    min: float = float("inf")
+    max: float = float("-inf")
+
+    def update(self, time: float):
+        self.time.append(time)
+        self.total_time += time
+        self.count += 1
+        self.average = self.total_time / self.count
+        self.frequency = 1 / self.average
+        self.min = min(self.min, time)
+        self.max = max(self.max, time)
 
 
 @dataclass
@@ -205,12 +220,12 @@ class Timer(ContextDecorator):
         total_time = self._records[self.name].total_time
         for name, record in self._records.items():
             total = record.total_time
-            average = total / len(record.time)
-            freq = 1 / average
+            count = record.count
+            average = record.average
+            freq = record.frequency
+            min_time = record.min
+            max_time = record.max
             percent = total / total_time * 100
-            count = len(record.time)
-            min_time = min(record.time)
-            max_time = max(record.time)
 
             t.add_row(
                 name,
@@ -227,8 +242,7 @@ class Timer(ContextDecorator):
     def _update_record(self, name: str, time: float):
         if name not in self._records:
             self._records[name] = TimeRecord()
-        self._records[name].time.append(time)
-        self._records[name].total_time += time
+        self._records[name].update(time)
 
     def __enter__(self) -> "Timer":
         self.start()
