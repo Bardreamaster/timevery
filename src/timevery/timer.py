@@ -173,6 +173,8 @@ class Timer(ContextDecorator):
 
     def sleep_until_next_period(self, name: Optional[str] = "sleep"):
         """Sleep until the next period."""
+        if self._start_time is None:
+            raise TimerError("Timer is not running. Use .start() to start it.")
         if self.period is None:
             raise TimerError("Period is not set.")
         elapsed_time = self.time_function() - self._start_time
