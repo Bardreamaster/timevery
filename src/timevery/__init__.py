@@ -45,6 +45,6 @@ You can use `timevery.Timer` in several different ways:
     locate()
 """
 
-__all__ = ["Timer"]
+__all__ = ["Timer", "TimerError"]
 
-from .timer import Timer
+from .timer import Timer, TimerError
