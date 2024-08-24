@@ -1,5 +1,7 @@
-from timevery.timer import TimeRecord
 from collections import deque
+
+from timevery.timer import TimeRecord
+
 
 class TestTimeRecord:
 
