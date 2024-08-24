@@ -1,8 +1,8 @@
 import time
 from collections import deque
 from contextlib import ContextDecorator
-from dataclasses import dataclass
-from typing import Any, Callable, List, Optional, Union
+from dataclasses import dataclass, field
+from typing import Any, Callable, Optional, Union
 
 
 class TimerError(Exception):
@@ -12,7 +12,7 @@ class TimerError(Exception):
 @dataclass
 class TimeRecord:
     total_time: float = 0.0
-    time: List[float] = deque(maxlen=120)
+    time: deque[float] = field(default_factory=lambda: deque(maxlen=120))
     count: int = 0
     average: float = 0.0
     frequency: float = 0.0
