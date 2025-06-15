@@ -198,7 +198,7 @@ class Timer(ContextDecorator):
         return self.stop()
 
     def report(self):
-        times = len(self._records[self.name].time)
+        times = self._records[self.name].count
         if not times % self.report_throttle_times == 0:
             return
         from rich import box
